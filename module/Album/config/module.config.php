@@ -15,7 +15,7 @@ return array(
                 'options' => array(
                     'route'    => '/',
                     'defaults' => array(
-                        'controller' => 'Album\Controller\Index',
+                        'controller' => 'Album\Controller\Album',
                         'action'     => 'index',
                     ),
                 ),
@@ -30,7 +30,7 @@ return array(
                     'route'    => '/album',
                     'defaults' => array(
                         '__NAMESPACE__' => 'Album\Controller',
-                        'controller'    => 'Index',
+                        'controller'    => 'Album',
                         'action'        => 'index',
                     ),
                 ),
