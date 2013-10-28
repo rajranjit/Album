@@ -1,29 +1,99 @@
 <?php
-
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  * Description of Album
  *
  * @author Rajendra
  */
-
 namespace Album\Model;
 
-class Album {
+use Zend\InputFilter\InputFilter;
+use Zend\InputFilterAwareInterface;
+use Zend\InputFilterInterface;
+
+class Album implements InputFilterAwareInterface
+{   
     public $id;
     public $artist;
     public $title;
+    protected $inputFilter;
     
-    public function exchangeArray($data){
-        $this->id =     (!empty($data['id'])) ? $data['id'] : null;
-        $this->artist = (!empty($data['artist'])) ? $data['artist'] : null;
-        $this->title =  (!empty($data['title'])) ? $data['title'] : null;
+    public function exchangeArray($data)
+    {
+        $this->id       = (isset($data['id']))      ? $data['id']       : null;
+        $this->artist   = (isset($data['artist']))  ? $data['artist']   : null;
+        $this->title    = (isset($data['title']))   ? $data['title']    : null;
     }
     
+    public function setInputFilter(InputFilterInterface $inputFilter)
+    {
+        throw new \Exception ("Not used");        
+    }
+
+    
+    public function getInputFilter()
+    {
+        if(!$this->inputFilter)
+            {
+                $inputFilter = new InputFilter();
+                
+                $inputFilter->add(array(
+                    'name'      => 'id',
+                    'required'  => true,
+                    'filters'   => array(
+                        array('name'    => 'Int'),
+                    ),
+                    ));
+                
+                $inputFilter->add(array(
+                    'name'      => 'artsit',
+                    'required'  => true,
+                    'filters'   => array(
+                        array('name' => 'StripTags'),
+                        array('name' => 'StringTrim'),
+                    ),
+                    'validators'    =>array(
+                        array(
+                            'name'  => 'StringLength',
+                            'options'   =>array(
+                                'encoding'  => 'UTF-8',
+                                'min'       => 1,
+                                'max'       => 100,
+                            ),
+                        ),
+                    ),
+                ));
+                
+                $inputFilter->add(array(
+                    'name'      => 'title',
+                    'required'  => true,
+                    'filters'   => array(
+                        array('name' => 'StripTags'),
+                        array('name' => 'StringTrim'),
+                    ),
+                    'validators'    =>array(
+                        array(
+                            'name'  => 'StringLength',
+                            'options'   =>array(
+                                'encoding'  => 'UTF-8',
+                                'min'       => 1,
+                                'max'       => 100,
+                            ),
+                        ),
+                    ),
+                ));
+                
+                $this->inputFilter = $inputFilter;
+            }
+            
+            return $this->inputFilter;
+    }
+       
+    public function getArrayCopy()
+    {
+        return get_object_vars($this);
+    }    
+    
+   
 }
 
 ?>
